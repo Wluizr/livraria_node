@@ -1,19 +1,21 @@
 import express from "express";
+import conectaNaDatabse from "./config/dbConnect.js";
+
+const conexao = await conectaNaDatabse();
+
+conexao.on("error ", (erro) => {    
+    console.error("erro de conexao", erro);
+});
+
+conexao.once("open", () =>{
+    console.log("Conexão com o Banco de dados, feita com sucesso!");
+});
+
 
 const app = express();
 app.use(express.json()); // middleware - Utilizado para ter acesso a requisições e resposta, caso precise de algum tratamento antes.
 
 
-const livros = [
-    {
-        id: 1, 
-        titulo: "Biblia"
-    },
-    {
-        id: 2, 
-        titulo: "O resgate do tigre"
-    },
-];
 
 function buscaLivro(id){
     return livros.findIndex(livros => { 
@@ -21,6 +23,7 @@ function buscaLivro(id){
     });
 }
 
+// - ROTAS - 
 app.get("/", (req, res) => {
     res.status(200).send("Curso de Node.js");
 });
