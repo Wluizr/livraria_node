@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 async function conectaNaDatabse(){
     
     // Tratar essa informação para subir de forma correta para o github
-    mongoose.connect("mongodb+srv://admin:admin123@myfirstbd.lqzark6.mongodb.net/livraria?retryWrites=true&w=majority&appName=MyFirstBd");
+    mongoose.connect(process.env.DB_CONNECTION_STRING);
     
     return mongoose.connection;
 }
