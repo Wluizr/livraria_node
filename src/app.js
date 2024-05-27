@@ -1,5 +1,6 @@
 import express from "express";
 import conectaNaDatabse from "./config/dbConnect.js";
+import livro from "./Models/Livros.js";
 
 const conexao = await conectaNaDatabse();
 
@@ -16,25 +17,19 @@ const app = express();
 app.use(express.json()); // middleware - Utilizado para ter acesso a requisições e resposta, caso precise de algum tratamento antes.
 
 
-
-function buscaLivro(id){
-    return livros.findIndex(livros => { 
-        return livros.id === Number(id)
-    });
-}
-
 // - ROTAS - 
 app.get("/", (req, res) => {
     res.status(200).send("Curso de Node.js");
 });
 
-app.get("/livros", (req, res) => {
-    res.status(200).json(livros);
+app.get("/livros", async (req, res) => {
+    // Apenas um objeto vazio para pegar todos os dados
+    const listaLivros = await livro.find({}); // Sempre que tiver o await precisa do async para conversarem na hora do callback
+    res.status(200).json(listaLivros);
 });
 
-app.get("/livros/:id", (req, res) => {    
+app.get("/livros/:id", (req, res) => {
     const index = buscaLivro(req.params.id);
-
     res.status(200).json(livros[index]);
 });
 
