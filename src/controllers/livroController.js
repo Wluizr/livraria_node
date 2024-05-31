@@ -1,4 +1,6 @@
 import livros from "../models/Livros.js";
+import { autor } from "../models/Autor.js";
+
 
 class LivroController{
 
@@ -25,9 +27,14 @@ class LivroController{
     // Req e Res, é uma responsabilidade do framework express.
     static async cadastrarLivro(req, res){
         try{
-            const novoLivro = await livros.create(req.body);
+            const novoLivro = req.body;
+            const autorEncontrado =  await autor.findById(novoLivro.autor);
 
-            res.status(201).json({message: "Criado com sucesso", livro: novoLivro});
+            // Operador de espalhamento do JavaScript;
+            const livroCompleto = { ...novoLivro, autor: { ...autorEncontrado._doc } };
+            const livroCriado = livros.create(livroCompleto);
+
+            res.status(201).json({message: "Criado com sucesso", livro: livroCriado});
         }catch (erro) {
             res.status(500).json({message: `${erro.message} - Falhar ao cadastrar um Livro!`});
         }   
